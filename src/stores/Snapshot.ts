@@ -13,7 +13,6 @@ export type SnapshotsMap = {
 
 const snapshotPath = '../assets/velib_data/station_status_snapshots_processed/'
 const snapshotsContext = import.meta.glob(`../assets/velib_data/station_status_snapshots_processed/*.json`)
-const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
 const getSnapShotMap = async (): Promise<SnapshotsMap> => {
     let snapshots: SnapshotsMap = {}
