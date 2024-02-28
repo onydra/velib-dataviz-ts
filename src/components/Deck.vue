@@ -2,15 +2,19 @@
     <div id="container">
         <div id="map"></div>
         <canvas id="deck-canvas"></canvas>
+
     </div>
 </template>
 
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
 import mapboxgl from 'mapbox-gl'
+import { useSnapshotStore } from '../stores/Snapshot'
+import type { Ref } from 'vue'
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN
-</script>
-<script lang="ts">
+
+const snapshotStore = useSnapshotStore()
 
 const INITIAL_VIEW_STATE = {
     latitude: 48.8566,
@@ -22,21 +26,34 @@ const INITIAL_VIEW_STATE = {
     bearing: 30
 }
 
-export default {
-    name: 'Deck',
-    mounted() {
-        const map = new mapboxgl.Map({
-            container: 'map',
-            style: 'mapbox://styles/nayrrod/ck5o57cn71g3z1ioai8gebzj7',
-            // Note: deck.gl will be in charge of interaction and event handling
-            interactive: false,
-            center: [INITIAL_VIEW_STATE.longitude, INITIAL_VIEW_STATE.latitude],
-            zoom: INITIAL_VIEW_STATE.zoom,
-            bearing: INITIAL_VIEW_STATE.bearing,
-            pitch: INITIAL_VIEW_STATE.pitch
-        })
-    }
+let map: Ref<mapboxgl.Map | null> = ref(null)
+
+const loadMap = () => {
+    const { longitude, latitude, zoom, bearing, pitch } = INITIAL_VIEW_STATE
+    map.value = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/nayrrod/ck5o57cn71g3z1ioai8gebzj7',
+        // Note: deck.gl will be in charge of interaction and event handling
+        interactive: false,
+        center: [longitude, latitude],
+        zoom: zoom,
+        bearing: bearing,
+        pitch: pitch
+    })
 }
+
+
+
+onMounted(() => {
+    loadMap()
+})
+
+
+</script>
+
+<script lang="ts">
+
+
 </script>
 
 <style scoped lang="postcss">
